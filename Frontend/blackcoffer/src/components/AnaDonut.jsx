@@ -20,8 +20,10 @@ chartjs.register(
   BarElement
 );
 function AnaDonut() {
-  const url = "http://localhost:8080/get";
+  
   const [state, setState] = useState([]);
+  const [sector, setSector] = useState("");
+ 
   let uaIn = 0;
   let uaRelevence = 0;
   let uaLivelyH = 0;
@@ -104,11 +106,27 @@ function AnaDonut() {
       ukLivelyH += state[i].likelihood;
     }
   }
+ const handleChange = (e) => {
+   setSector(e.target.value);
+ };
+ let url = "http://localhost:8080/get";
+ if (sector === "Energy") {
+   url = "http://localhost:8080/get?sector=Energy";
+ } else if (sector === "Environment") {
+   url = "http://localhost:8080/get?sector=Environment";
+ } else if (sector === "Manufacturing") {
+   url = "http://localhost:8080/get?sector=Manufacturing";
+ } else if (sector === "Retail") {
+   url = "http://localhost:8080/get?sector=Retail";
+ } else if (sector === "Government") {
+   url = "http://localhost:8080/get?sector=Government";
+ }
+
   useEffect(() => {
     axios.get(url).then((res) => {
       setState(res.data);
     });
-  }, []);
+  }, [url]);
 
   const options = {
     indexAxis: "x",
@@ -149,7 +167,7 @@ function AnaDonut() {
         data: [uaIn, ruIn, inIn, saIn, egIn, chIn, ukIn, iraqIn, iranIn, caIn],
         borderColor: "rgb(73,52,32)",
         backgroundColor: [
-          "rgb(196,22,28)",
+          "teal",
           "rgb(0,54,160)",
           "rgb(51,137,221)",
           "rgb(0,105,51)",
@@ -157,7 +175,7 @@ function AnaDonut() {
           "rgb(215,39,15)",
           "rgb(1,32,102)",
           "rgb(110,104,101)",
-          "rgb(34,154,61)",
+          "orange",
           "rgb(247,209,0)",
         ],
         color: "teal",
@@ -178,7 +196,7 @@ function AnaDonut() {
         ],
         borderColor: "rgb(73,52,32)",
         backgroundColor: [
-          "rgb(196,22,28)",
+          "teal",
           "rgb(0,54,160)",
           "rgb(51,137,221)",
           "rgb(0,105,51)",
@@ -186,7 +204,7 @@ function AnaDonut() {
           "rgb(215,39,15)",
           "rgb(1,32,102)",
           "rgb(110,104,101)",
-          "rgb(34,154,61)",
+          "orange",
           "rgb(247,209,0)",
         ],
         color: "teal",
@@ -207,7 +225,7 @@ function AnaDonut() {
         ],
         borderColor: "rgb(73,52,32)",
         backgroundColor: [
-          "rgb(196,22,28)",
+          "teal",
           "rgb(0,54,160)",
           "rgb(51,137,221)",
           "rgb(0,105,51)",
@@ -215,7 +233,7 @@ function AnaDonut() {
           "rgb(215,39,15)",
           "rgb(1,32,102)",
           "rgb(110,104,101)",
-          "rgb(34,154,61)",
+          "orange",
           "rgb(247,209,0)",
         ],
         color: "teal",
@@ -223,10 +241,24 @@ function AnaDonut() {
     ],
   };
   return (
-    <>
+    <div >
+      <select
+        style={{ marginLeft: "20px" }}
+        value={sector}
+        onChange={handleChange}
+      >
+        <option value="">
+          sector wise intensity && relevance && likelihood
+        </option>
+        <option value="Energy">Energy</option>
+        <option value="Environment">Environment</option>
+        <option value="Manufacturing">Manufacturing</option>
+        <option value="Retail">Retail</option>
+        <option value="Government">Government</option>
+      </select>
       <Doughnut data={data} options={options} />
       {/* <Doughnut data={data} options={options} /> */}
-    </>
+    </div>
   );
 }
 

@@ -19,8 +19,9 @@ chartjs.register(
   Legend
 );
 function AnaBar() {
-  const url = "http://localhost:8080/get";
+  
   const [state, setState] = useState([]);
+  const [sector, setSector] = useState("");
   let uaIn = 0;
   let uaRelevence = 0;
   let uaLivelyH = 0;
@@ -103,11 +104,28 @@ function AnaBar() {
       ukLivelyH += state[i].likelihood;
     }
   }
+
+  
+   const handleChange = (e) => {
+     setSector(e.target.value);
+   };
+   let url = "http://localhost:8080/get";
+   if (sector === "Energy") {
+     url = "http://localhost:8080/get?sector=Energy";
+   } else if (sector === "Environment") {
+     url = "http://localhost:8080/get?sector=Environment";
+   } else if (sector === "Manufacturing") {
+     url = "http://localhost:8080/get?sector=Manufacturing";
+   } else if (sector === "Retail") {
+     url = "http://localhost:8080/get?sector=Retail";
+   } else if (sector === "Government") {
+     url = "http://localhost:8080/get?sector=Government";
+   }
   useEffect(() => {
     axios.get(url).then((res) => {
       setState(res.data);
     });
-  }, []);
+  }, [url]);
 
   const options = {
     indexAxis: "x",
@@ -190,6 +208,16 @@ function AnaBar() {
   };
   return (
     <>
+      <select style={{marginLeft:"20px"}} value={sector} onChange={handleChange}>
+        <option value="">
+          sector wise intensity && relevance && likelihood
+        </option>
+        <option value="Energy">Energy</option>
+        <option value="Environment">Environment</option>
+        <option value="Manufacturing">Manufacturing</option>
+        <option value="Retail">Retail</option>
+        <option value="Government">Government</option>
+      </select>
       <Bar data={data} options={options} />
       {/* <Doughnut data={data} options={options} /> */}
     </>
