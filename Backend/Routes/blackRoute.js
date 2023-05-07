@@ -5,7 +5,7 @@ const { blackcofferModal } = require("../Models/blackModal");
 //get request from user
 blackRoutes.get("/get", async (req, res) => {
   try {
-    const data = await blackcofferModal.find();
+    const data = await blackcofferModal.find(req.query);
     res.send(data);
   } catch (err) {
     res.send(err.message);
