@@ -34,6 +34,7 @@ setSeta(e.target.value)
  }
    useEffect(() => {
      axios.get(url).then((res) => {
+      console.log(res.data)
        setState(res.data);
      });
    }, [url]);
