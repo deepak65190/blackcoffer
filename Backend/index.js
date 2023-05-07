@@ -9,7 +9,7 @@ app.use(cors());
 app.use("/", blackRoutes);
 
 //server listioning
-app.listen(process.env.PORT, async (req, res) => {
+app.listen(process.env.PORT||3000, async (req, res) => {
   await connection;
   console.log("connected to db");
   console.log(`listing on ${process.env.PORT}`);
