@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import {  Doughnut } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 import axios from "axios";
+import "../App.css"
 import {
   Chart as chartjs,
   CategoryScale,
   LinearScale,
   BarElement,
   Title,
-  ArcElement ,
+  ArcElement,
   Tooltip,
   Legend,
 } from "chart.js";
@@ -19,11 +20,11 @@ chartjs.register(
   CategoryScale,
   BarElement
 );
+
 function AnaDonut() {
-  
   const [state, setState] = useState([]);
   const [sector, setSector] = useState("");
- 
+
   let uaIn = 0;
   let uaRelevence = 0;
   let uaLivelyH = 0;
@@ -63,6 +64,7 @@ function AnaDonut() {
   let ukIn = 0;
   let ukRelevence = 0;
   let ukLivelyH = 0;
+
   for (let i = 0; i < state.length; i++) {
     if (state[i].country === "United States of America") {
       uaIn += state[i].intensity;
@@ -106,21 +108,23 @@ function AnaDonut() {
       ukLivelyH += state[i].likelihood;
     }
   }
- const handleChange = (e) => {
-   setSector(e.target.value);
- };
- let url = "http://localhost:8080/get";
- if (sector === "Energy") {
-   url = "http://localhost:8080/get?sector=Energy";
- } else if (sector === "Environment") {
-   url = "http://localhost:8080/get?sector=Environment";
- } else if (sector === "Manufacturing") {
-   url = "http://localhost:8080/get?sector=Manufacturing";
- } else if (sector === "Retail") {
-   url = "http://localhost:8080/get?sector=Retail";
- } else if (sector === "Government") {
-   url = "http://localhost:8080/get?sector=Government";
- }
+
+  const handleChange = (e) => {
+    setSector(e.target.value);
+  };
+
+  let url = "http://localhost:8080/get";
+  if (sector === "Energy") {
+    url = "http://localhost:8080/get?sector=Energy";
+  } else if (sector === "Environment") {
+    url = "http://localhost:8080/get?sector=Environment";
+  } else if (sector === "Manufacturing") {
+    url = "http://localhost:8080/get?sector=Manufacturing";
+  } else if (sector === "Retail") {
+    url = "http://localhost:8080/get?sector=Retail";
+  } else if (sector === "Government") {
+    url = "http://localhost:8080/get?sector=Government";
+  }
 
   useEffect(() => {
     axios.get(url).then((res) => {
@@ -134,15 +138,15 @@ function AnaDonut() {
       bar: {
         borderWidth: 0,
       },
-      responsive: true,
-      plugins: {
-        legend: {
-          position: "left",
-        },
-        title: {
-          display: true,
-          text: "blackCoffer",
-        },
+    },
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "left",
+      },
+      title: {
+        display: true,
+        text: "Dashboard",
       },
     },
   };
@@ -159,6 +163,7 @@ function AnaDonut() {
     "Iran",
     "Canada",
   ];
+
   const data = {
     labels,
     datasets: [
@@ -240,15 +245,12 @@ function AnaDonut() {
       },
     ],
   };
+
   return (
-    <div >
-      <select
-        style={{ marginLeft: "20px" }}
-        value={sector}
-        onChange={handleChange}
-      >
+    <div>
+      <select className="sector-select" value={sector} onChange={handleChange}>
         <option value="">
-          sector wise intensity && relevance && likelihood
+          Sector wise intensity, relevance, and likelihood
         </option>
         <option value="Energy">Energy</option>
         <option value="Environment">Environment</option>
@@ -257,7 +259,6 @@ function AnaDonut() {
         <option value="Government">Government</option>
       </select>
       <Doughnut data={data} options={options} />
-      {/* <Doughnut data={data} options={options} /> */}
     </div>
   );
 }

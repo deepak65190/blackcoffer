@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Bar ,Doughnut} from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import axios from "axios";
 import {
   Chart as chartjs,
@@ -10,18 +10,14 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-chartjs.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+import "../App.css";
+
+chartjs.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
 function AnaBar() {
-  
   const [state, setState] = useState([]);
   const [sector, setSector] = useState("");
+  
   let uaIn = 0;
   let uaRelevence = 0;
   let uaLivelyH = 0;
@@ -61,6 +57,7 @@ function AnaBar() {
   let ukIn = 0;
   let ukRelevence = 0;
   let ukLivelyH = 0;
+
   for (let i = 0; i < state.length; i++) {
     if (state[i].country === "United States of America") {
       uaIn += state[i].intensity;
@@ -105,22 +102,23 @@ function AnaBar() {
     }
   }
 
-  
-   const handleChange = (e) => {
-     setSector(e.target.value);
-   };
-   let url = "http://localhost:8080/get";
-   if (sector === "Energy") {
-     url = "http://localhost:8080/get?sector=Energy";
-   } else if (sector === "Environment") {
-     url = "http://localhost:8080/get?sector=Environment";
-   } else if (sector === "Manufacturing") {
-     url = "http://localhost:8080/get?sector=Manufacturing";
-   } else if (sector === "Retail") {
-     url = "http://localhost:8080/get?sector=Retail";
-   } else if (sector === "Government") {
-     url = "http://localhost:8080/get?sector=Government";
-   }
+  const handleChange = (e) => {
+    setSector(e.target.value);
+  };
+
+  let url = "http://localhost:8080/get";
+  if (sector === "Energy") {
+    url = "http://localhost:8080/get?sector=Energy";
+  } else if (sector === "Environment") {
+    url = "http://localhost:8080/get?sector=Environment";
+  } else if (sector === "Manufacturing") {
+    url = "http://localhost:8080/get?sector=Manufacturing";
+  } else if (sector === "Retail") {
+    url = "http://localhost:8080/get?sector=Retail";
+  } else if (sector === "Government") {
+    url = "http://localhost:8080/get?sector=Government";
+  }
+
   useEffect(() => {
     axios.get(url).then((res) => {
       setState(res.data);
@@ -133,15 +131,15 @@ function AnaBar() {
       bar: {
         borderWidth: 2,
       },
-      responsive: true,
-      plugins: {
-        legend: {
-          position: "left",
-        },
-        title: {
-          display: true,
-          text: "blackCoffer",
-        },
+    },
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "left",
+      },
+      title: {
+        display: true,
+        text: "Dashboard",
       },
     },
   };
@@ -158,13 +156,13 @@ function AnaBar() {
     "Iran",
     "Canada",
   ];
+
   const data = {
     labels,
     datasets: [
       {
         label: "Intensity",
         data: [uaIn, ruIn, inIn, saIn, egIn, chIn, ukIn, iraqIn, iranIn, caIn],
-        //borderColor: "black",
         backgroundColor: "rgb(60,151,218)",
         color: "teal",
       },
@@ -182,7 +180,6 @@ function AnaBar() {
           iranLivelyH,
           caLivelyH,
         ],
-        //borderColor: "black",
         backgroundColor: "rgb(246,200,95)",
         color: "teal",
       },
@@ -200,27 +197,30 @@ function AnaBar() {
           iranRelevence,
           caRelevence,
         ],
-        //borderColor: "black",
         backgroundColor: "rgb(122,94,188)",
         color: "teal",
       },
     ],
   };
+
   return (
-    <>
-      <select style={{marginLeft:"20px"}} value={sector} onChange={handleChange}>
-        <option value="">
-          sector wise intensity && relevance && likelihood
-        </option>
-        <option value="Energy">Energy</option>
-        <option value="Environment">Environment</option>
-        <option value="Manufacturing">Manufacturing</option>
-        <option value="Retail">Retail</option>
-        <option value="Government">Government</option>
-      </select>
-      <Bar data={data} options={options} />
-      {/* <Doughnut data={data} options={options} /> */}
-    </>
+    <div className="container">
+      <div className="select-container">
+        <select value={sector} onChange={handleChange}>
+          <option value="">Select sector</option>
+          <option value="Energy">Energy</option>
+          <option value="Environment">Environment</option>
+          <option value="Manufacturing">Manufacturing</option>
+          <option value="Retail">Retail</option>
+          <option value="Government">Government</option>
+        </select>
+      </div>
+      <div className="chart-container">
+        <div className="bar-chart">
+          <Bar data={data} options={options} />
+        </div>
+      </div>
+    </div>
   );
 }
 
